@@ -19,7 +19,7 @@ public class SnakeController : MonoBehaviour
     private void Awake()
     {
         gridPosition = new Vector2Int(10, 10);
-        gridMoveTimerMax = 0.2f;
+        gridMoveTimerMax = 0.1f;
         gridMoveTimer = gridMoveTimerMax;
         gridMoveDirection = Vector2Int.right;
     }
@@ -103,5 +103,15 @@ public class SnakeController : MonoBehaviour
 
         GameObject newBodyPart = Instantiate(bodyPartPrefab, newBodyPartPosition, Quaternion.identity);
         snakeBodyParts.Add(newBodyPart.transform);
+    }
+
+    public Vector2Int GetSnakeHeadPosition()
+    {
+        return gridPosition;
+    }
+
+    public List<Transform> GetSnakeBodyParts()
+    {
+        return snakeBodyParts;
     }
 }
