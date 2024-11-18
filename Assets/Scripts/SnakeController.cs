@@ -15,6 +15,8 @@ public class SnakeController : MonoBehaviour
     private List<Transform> snakeBodyParts = new List<Transform>();
     public GameObject bodyPartPrefab;
 
+    private int decreaseLenght = 2;
+
 
     private void Awake()
     {
@@ -27,7 +29,7 @@ public class SnakeController : MonoBehaviour
     private void Start()
     {
         foodSpawner = FindObjectOfType<FoodSpawner>();
-        foodSpawner.SpawnFood();
+        // foodSpawner.SpawnFood();
 
     }
 
@@ -85,12 +87,20 @@ public class SnakeController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other) 
     {
-        if(other.CompareTag("Food"))
+        if(other.CompareTag("MassGainer"))
         {
-            Debug.Log("Snake ate food");
+            Debug.Log("Snake ate gainer");
             Destroy(other.gameObject);
             Grow();
-            foodSpawner.SpawnFood();
+            // foodSpawner.SpawnFood();
+
+        }
+        else if(other.CompareTag("MassBurner"))
+        {
+            Destroy(other.gameObject);
+            Debug.Log("Snake ate burner");
+            Shrink(decreaseLenght);
+            // foodSpawner.SpawnFood();
 
         }
     }
@@ -105,6 +115,24 @@ public class SnakeController : MonoBehaviour
         snakeBodyParts.Add(newBodyPart.transform);
     }
 
+    private void Shrink(int lenght)
+    {
+        for(int i=0; i < lenght; i++)
+        {
+            if (snakeBodyParts.Count > 0)
+            {
+                Transform lastPart = snakeBodyParts[snakeBodyParts.Count - 1];
+                snakeBodyParts.Remove(lastPart);
+                Destroy(lastPart.gameObject);
+            }
+            else
+            {
+                Debug.Log("Cannot Shrink");
+                break;
+            }
+        }
+    }
+
     public Vector2Int GetSnakeHeadPosition()
     {
         return gridPosition;
@@ -113,5 +141,10 @@ public class SnakeController : MonoBehaviour
     public List<Transform> GetSnakeBodyParts()
     {
         return snakeBodyParts;
+    }
+
+    public int GetSnakeSize()
+    {
+        return 1+ snakeBodyParts.Count;
     }
 }

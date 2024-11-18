@@ -243,9 +243,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21ad5260f1b753345bfdf444f74ceee1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  foodPrefab: {fileID: 5125639019666010255, guid: 277d5566bced98f479ad7a4757f3d38f, type: 3}
+  massGainerPrefab: {fileID: 5125639019666010255, guid: 277d5566bced98f479ad7a4757f3d38f, type: 3}
+  massBurnerPrefab: {fileID: 8833161101698412502, guid: e95d06665d7c0104398ed77be7321b8c, type: 3}
   girdWidth: 20
   girdHeight: 20
+  minSpawnInterval: 3
+  maxSpawnInterval: 5
+  foodLifetime: 4
 --- !u!4 &1080720899
 Transform:
   m_ObjectHideFlags: 0
