@@ -2,12 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class UIManager : MonoBehaviour
 {
     public GameObject pausePanel;
     public GameObject gamePanel;
     public GameObject gameOverScreen;
+
+    public TextMeshProUGUI scoreText;
 
     public void PlaySinglePlayer()
     {
@@ -55,5 +58,10 @@ public class UIManager : MonoBehaviour
         Time.timeScale = 0f;
         gamePanel.SetActive(false);
         gameOverScreen.SetActive(true);
+    }
+
+    public void UpdateScore(int score)
+    {
+        scoreText.text = "Score : " + score;
     }
 }

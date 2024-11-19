@@ -211,6 +211,7 @@ public class SnakeController : MonoBehaviour
     {
         score += points * scoreMultiplier;
         Debug.Log("Score: " + score);
+        uiManager.UpdateScore(score);
     }
 
     private void ActivatePowerUp(PowerUp.PowerUpType powerUpType, float duration)
