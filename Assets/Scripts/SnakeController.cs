@@ -1,14 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SnakeController : MonoBehaviour
 {
-    private Vector2Int gridPosition;
-    private Vector2Int gridMoveDirection;
+    public Vector2Int gridSize = new Vector2Int(20, 20);
 
-    private float gridMoveTimer;
-    private float gridMoveTimerMax;
+    private Vector2Int headPosition;
+    private Vector2Int moveDirection;
+
+    private float moveTimer;
+    private float moveTimerMax;
 
     private FoodSpawner foodSpawner;
     
@@ -20,10 +23,10 @@ public class SnakeController : MonoBehaviour
 
     private void Awake()
     {
-        gridPosition = new Vector2Int(10, 10);
-        gridMoveTimerMax = 0.1f;
-        gridMoveTimer = gridMoveTimerMax;
-        gridMoveDirection = Vector2Int.right;
+        headPosition = new Vector2Int(10, 10);
+        moveTimerMax = 0.1f;
+        moveTimer = moveTimerMax;
+        moveDirection = Vector2Int.right;
     }
 
     private void Start()
@@ -42,22 +45,22 @@ public class SnakeController : MonoBehaviour
 
     private void HandleInput()
     {
-        if(Input.GetKeyDown(KeyCode.W) && gridMoveDirection != Vector2Int.down)
-            gridMoveDirection = Vector2Int.up;
-        else if(Input.GetKeyDown(KeyCode.S) && gridMoveDirection != Vector2Int.up)
-           gridMoveDirection =  Vector2Int.down;
-        else if(Input.GetKeyDown(KeyCode.A) && gridMoveDirection != Vector2Int.right)
-            gridMoveDirection = Vector2Int.left;
-        else if(Input.GetKeyDown(KeyCode.D) && gridMoveDirection != Vector2Int.left)
-            gridMoveDirection = Vector2Int.right;
+        if(Input.GetKeyDown(KeyCode.W) && moveDirection != Vector2Int.down)
+            moveDirection = Vector2Int.up;
+        else if(Input.GetKeyDown(KeyCode.S) && moveDirection != Vector2Int.up)
+           moveDirection =  Vector2Int.down;
+        else if(Input.GetKeyDown(KeyCode.A) && moveDirection != Vector2Int.right)
+            moveDirection = Vector2Int.left;
+        else if(Input.GetKeyDown(KeyCode.D) && moveDirection != Vector2Int.left)
+            moveDirection = Vector2Int.right;
     }
 
     private void Move()
     {
-        gridMoveTimer += Time.deltaTime;
-        if(gridMoveTimer >= gridMoveTimerMax)
+        moveTimer += Time.deltaTime;
+        if(moveTimer >= moveTimerMax)
         {
-            gridMoveTimer -= gridMoveTimerMax;
+            moveTimer -= moveTimerMax;
 
             // moving the body aorts
             for ( int i = snakeBodyParts.Count -1; i >0; i--)
@@ -72,10 +75,30 @@ public class SnakeController : MonoBehaviour
 
             // moving the head
 
-            gridPosition += gridMoveDirection;
-            transform.position = new Vector3(gridPosition.x, gridPosition.y);
-            transform.eulerAngles = new Vector3 (0, 0, GetAngleFromDirection(gridMoveDirection));
+            headPosition += moveDirection;
+            // screen wrapping 
+
+            headPosition = WrapGridPosition(headPosition);
+
+            transform.position = new Vector3(headPosition.x, headPosition.y);
+            transform.eulerAngles = new Vector3 (0, 0, GetAngleFromDirection(moveDirection));
+
+            // checking collision with body
+            if(IsOccupiedBySnake(headPosition))
+            {
+                Debug.Log("Die");
+                Death();
+            }
+
+
         }
+    }
+
+    private Vector2Int WrapGridPosition(Vector2Int position)
+    {
+        position.x = (position.x + gridSize.x) % gridSize.x;
+        position.y = (position.y + gridSize.y) % gridSize.y;
+        return position;
     }
 
     private float GetAngleFromDirection(Vector2Int direction)
@@ -83,6 +106,25 @@ public class SnakeController : MonoBehaviour
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         if(angle < 0) angle += 360;
         return angle;
+    }
+
+    public bool IsOccupiedBySnake(Vector2Int position)
+    {
+        // if (headPosition == position)
+        //     return true;
+        
+        foreach(Transform bodyPart in snakeBodyParts)
+        {
+            if(Vector2Int.RoundToInt(bodyPart.position) == position)
+                return true;
+        }
+
+        return false;
+    }
+
+    private void Death()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     private void OnTriggerEnter2D(Collider2D other) 
@@ -103,6 +145,12 @@ public class SnakeController : MonoBehaviour
             // foodSpawner.SpawnFood();
 
         }
+        
+        // if(other.CompareTag("Body"))
+        // {
+        //     Debug.Log("Dead");
+
+        // }
     }
 
     private void Grow()
@@ -135,7 +183,7 @@ public class SnakeController : MonoBehaviour
 
     public Vector2Int GetSnakeHeadPosition()
     {
-        return gridPosition;
+        return headPosition;
     }
 
     public List<Transform> GetSnakeBodyParts()
@@ -147,4 +195,6 @@ public class SnakeController : MonoBehaviour
     {
         return 1+ snakeBodyParts.Count;
     }
+
+
 }

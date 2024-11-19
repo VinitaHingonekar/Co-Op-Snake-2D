@@ -366,6 +366,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c6bda01e75326a4c942bdb946cc5858, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gridSize: {x: 20, y: 20}
   bodyPartPrefab: {fileID: 3522382435890157505, guid: 7ab55cd410e51634988f8d362cf8fee4, type: 3}
 --- !u!61 &1208011275
 BoxCollider2D:
@@ -396,7 +397,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}

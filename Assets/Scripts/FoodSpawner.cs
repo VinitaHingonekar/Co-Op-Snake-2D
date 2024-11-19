@@ -10,7 +10,7 @@ public class FoodSpawner : MonoBehaviour
     [SerializeField] private int girdHeight = 20;
     [SerializeField] private float minSpawnInterval = 3f;
     [SerializeField] private float maxSpawnInterval = 5f;
-    [SerializeField] private float foodLifetime = 4f;
+    [SerializeField] private float foodLifetime = 10f;
 
     private SnakeController snakeController;
 
@@ -45,7 +45,7 @@ public class FoodSpawner : MonoBehaviour
             int y = Random.Range(0, girdHeight);
             foodPosition = new Vector2Int(x, y);
         }
-        while (IsOccupiedBySnake(foodPosition));
+        while (snakeController.IsOccupiedBySnake(foodPosition));
 
         GameObject foodPrefab = ChooseFoodType();
 
@@ -65,7 +65,7 @@ public class FoodSpawner : MonoBehaviour
         if (!canSpawnBurner)
             return massGainerPrefab;
 
-        return Random.value > 0.5 ? massGainerPrefab : massBurnerPrefab;
+        return Random.value > 0.5 ? massGainerPrefab : massGainerPrefab;
     }
 
     // public void SpawnFood()
@@ -81,17 +81,5 @@ public class FoodSpawner : MonoBehaviour
     //     Instantiate(foodPrefab, new Vector3(foodPosition.x, foodPosition.y, 0), Quaternion.identity);
     // }
 
-    private bool IsOccupiedBySnake(Vector2Int position)
-    {
-        if (snakeController.GetSnakeHeadPosition() == position)
-            return true;
-        
-        foreach(Transform bodyPart in snakeController.GetSnakeBodyParts())
-        {
-            if(Vector2Int.RoundToInt(bodyPart.position) == position)
-                return true;
-        }
-
-        return false;
-    }
+    
 }
