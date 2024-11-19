@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
 
@@ -11,6 +12,9 @@ public class UIManager : MonoBehaviour
     public GameObject gameOverScreen;
 
     public TextMeshProUGUI scoreText;
+    // public Image powerUpActiveSprite;
+    // public Image powerUpSprite;
+    
 
     public void PlaySinglePlayer()
     {
@@ -63,5 +67,12 @@ public class UIManager : MonoBehaviour
     public void UpdateScore(int score)
     {
         scoreText.text = "Score : " + score;
+    }
+
+    public IEnumerator UpdatePowerUp(string powerUpName, float duration)
+    {
+        // powerUpText.text = powerUpName;
+        yield return new WaitForSeconds(duration);
+        // powerUpText.text = "";
     }
 }

@@ -30,6 +30,7 @@ public class SnakeController : MonoBehaviour
     private float cooldownTimer = 3f;
     private bool isOnCooldown = false;
     private bool hasShield = false;
+    private bool canUsePowerUp = true;
 
     // UI
     public UIManager uiManager;
@@ -99,7 +100,6 @@ public class SnakeController : MonoBehaviour
             // checking collision with body
             if(IsOccupiedBySnake(headPosition))
             {
-                Debug.Log("Die");
                 Death();
             }
         }
@@ -141,7 +141,6 @@ public class SnakeController : MonoBehaviour
         }
         else
         {
-            // SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
             uiManager.ShowGameOverScreen();
             score = 0;
         }
@@ -151,30 +150,35 @@ public class SnakeController : MonoBehaviour
     {
         if(other.CompareTag("MassGainer"))
         {
-            // Debug.Log("Snake ate gainer");
             Destroy(other.gameObject);
             Grow();
             AddScore(foodScore);
         }
         else if(other.CompareTag("MassBurner"))
         {
-            // Debug.Log("Snake ate burner");
             Destroy(other.gameObject);
             Shrink(decreaseLenght);
             AddScore(-foodScore);
         }
         else if(other.CompareTag("PowerUp"))
         {
-            if(!isOnCooldown)
+            if(canUsePowerUp)
             {
-                PowerUp powerUp = other.GetComponent<PowerUp>();
-                Destroy(other.gameObject);
-                ActivatePowerUp(powerUp.powerUpType, powerUp.duration);
-                StartCoroutine(StartCoolDownTimer());
+                if(!isOnCooldown)
+                {
+                    PowerUp powerUp = other.GetComponent<PowerUp>();
+                    Destroy(other.gameObject);
+                    ActivatePowerUp(powerUp.powerUpType, powerUp.duration);
+                    StartCoroutine(StartCoolDownTimer());
+                }
+                else
+                {
+                    Debug.Log("Player on Cool Down");
+                }
             }
             else
             {
-                Debug.Log("Player on Cool Down");
+                Debug.Log("Player cannot use Power Up");
             }
         }
     }
@@ -216,6 +220,8 @@ public class SnakeController : MonoBehaviour
 
     private void ActivatePowerUp(PowerUp.PowerUpType powerUpType, float duration)
     {
+        canUsePowerUp = false;
+        StartCoroutine(uiManager.UpdatePowerUp(powerUpType.ToString(), duration));
         switch (powerUpType)
         {
             case PowerUp.PowerUpType.Shield:
@@ -233,11 +239,8 @@ public class SnakeController : MonoBehaviour
     IEnumerator StartCoolDownTimer()
     {
         isOnCooldown = true;
-        Debug.Log("Is on cooldown");
         yield return new WaitForSeconds(cooldownTimer);
         isOnCooldown = false;
-        Debug.Log("Is not on cooldown");
-
     }
 
     IEnumerator ActivateShield(float duration)
@@ -245,6 +248,7 @@ public class SnakeController : MonoBehaviour
         hasShield = true;
         yield return new WaitForSeconds(duration);
         hasShield = false;
+        canUsePowerUp = true;
     }
 
     IEnumerator ActivateSpeedUp(float duration)
@@ -252,6 +256,7 @@ public class SnakeController : MonoBehaviour
         speedMultiplier = 1.5f;
         yield return new WaitForSeconds(duration);
         speedMultiplier = 1f;
+        canUsePowerUp = true;
     }
 
     IEnumerator ActivateScoreBoost(float duration)
@@ -259,6 +264,7 @@ public class SnakeController : MonoBehaviour
         scoreMultiplier = 2;
         yield return new WaitForSeconds(duration);
         scoreMultiplier = 1;
+        canUsePowerUp = true;
     }
 
     public Vector2Int GetSnakeHeadPosition()
