@@ -20,6 +20,7 @@ public class SnakeController : MonoBehaviour
 
     private int decreaseLenght = 2;
 
+    // score variables
     private int score;
     private int foodScore = 10;
 
@@ -29,8 +30,6 @@ public class SnakeController : MonoBehaviour
     private float cooldownTimer = 3f;
     private bool isOnCooldown = false;
     private bool hasShield = false;
-    private bool hasScoreBoost = false;
-    private bool hasSpeedUp = false;
 
     private void Awake()
     {
