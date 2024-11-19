@@ -24,8 +24,13 @@ public class SnakeController : MonoBehaviour
     private int foodScore = 10;
 
     // power up varaibles
-    bool hasShield = false;
     private int scoreMultiplier = 1;
+    private float speedMultiplier = 1f;
+    private float cooldownTimer = 3f;
+    private bool isOnCooldown = false;
+    private bool hasShield = false;
+    private bool hasScoreBoost = false;
+    private bool hasSpeedUp = false;
 
     private void Awake()
     {
@@ -62,6 +67,8 @@ public class SnakeController : MonoBehaviour
 
     private void Move()
     {
+        moveTimerMax = 0.1f / speedMultiplier;
+
         moveTimer += Time.deltaTime;
         if(moveTimer >= moveTimerMax)
         {
@@ -155,10 +162,17 @@ public class SnakeController : MonoBehaviour
         }
         else if(other.CompareTag("PowerUp"))
         {
-            Debug.Log("Snake got a power up");
-            Destroy(other.gameObject);
-            Shrink(decreaseLenght);
-            AddScore(-foodScore);
+            if(!isOnCooldown)
+            {
+                PowerUp powerUp = other.GetComponent<PowerUp>();
+                Destroy(other.gameObject);
+                ActivatePowerUp(powerUp.powerUpType, powerUp.duration);
+                StartCoroutine(StartCoolDownTimer());
+            }
+            else
+            {
+                Debug.Log("Player on Cool Down");
+            }
         }
     }
 
@@ -194,6 +208,53 @@ public class SnakeController : MonoBehaviour
     {
         score += points * scoreMultiplier;
         Debug.Log("Score: " + score);
+    }
+
+    private void ActivatePowerUp(PowerUp.PowerUpType powerUpType, float duration)
+    {
+        switch (powerUpType)
+        {
+            case PowerUp.PowerUpType.Shield:
+                StartCoroutine(ActivateShield(duration));
+                break;
+            case PowerUp.PowerUpType.SpeedUp:
+                StartCoroutine(ActivateSpeedUp(duration));
+                break;
+            case PowerUp.PowerUpType.ScoreBoost:
+                StartCoroutine(ActivateScoreBoost(duration));
+                break;
+        }
+    }
+
+    IEnumerator StartCoolDownTimer()
+    {
+        isOnCooldown = true;
+        Debug.Log("Is on cooldown");
+        yield return new WaitForSeconds(cooldownTimer);
+        isOnCooldown = false;
+        Debug.Log("Is not on cooldown");
+
+    }
+
+    IEnumerator ActivateShield(float duration)
+    {
+        hasShield = true;
+        yield return new WaitForSeconds(duration);
+        hasShield = false;
+    }
+
+    IEnumerator ActivateSpeedUp(float duration)
+    {
+        speedMultiplier = 1.5f;
+        yield return new WaitForSeconds(duration);
+        speedMultiplier = 1f;
+    }
+
+    IEnumerator ActivateScoreBoost(float duration)
+    {
+        scoreMultiplier = 2;
+        yield return new WaitForSeconds(duration);
+        scoreMultiplier = 1;
     }
 
     public Vector2Int GetSnakeHeadPosition()
