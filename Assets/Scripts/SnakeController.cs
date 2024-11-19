@@ -20,6 +20,10 @@ public class SnakeController : MonoBehaviour
 
     private int decreaseLenght = 2;
 
+    private int score;
+    private int scoreMultiplier = 1;
+    private int foodScore = 10;
+
 
     private void Awake()
     {
@@ -32,7 +36,6 @@ public class SnakeController : MonoBehaviour
     private void Start()
     {
         foodSpawner = FindObjectOfType<FoodSpawner>();
-        // foodSpawner.SpawnFood();
 
     }
 
@@ -74,10 +77,9 @@ public class SnakeController : MonoBehaviour
             }
 
             // moving the head
-
             headPosition += moveDirection;
+            
             // screen wrapping 
-
             headPosition = WrapGridPosition(headPosition);
 
             transform.position = new Vector3(headPosition.x, headPosition.y);
@@ -89,8 +91,6 @@ public class SnakeController : MonoBehaviour
                 Debug.Log("Die");
                 Death();
             }
-
-
         }
     }
 
@@ -118,39 +118,31 @@ public class SnakeController : MonoBehaviour
             if(Vector2Int.RoundToInt(bodyPart.position) == position)
                 return true;
         }
-
         return false;
     }
 
     private void Death()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        score = 0;
     }
 
     private void OnTriggerEnter2D(Collider2D other) 
     {
         if(other.CompareTag("MassGainer"))
         {
-            Debug.Log("Snake ate gainer");
+            // Debug.Log("Snake ate gainer");
             Destroy(other.gameObject);
             Grow();
-            // foodSpawner.SpawnFood();
-
+            AddScore(foodScore);
         }
         else if(other.CompareTag("MassBurner"))
         {
+            // Debug.Log("Snake ate burner");
             Destroy(other.gameObject);
-            Debug.Log("Snake ate burner");
             Shrink(decreaseLenght);
-            // foodSpawner.SpawnFood();
-
+            AddScore(-foodScore);
         }
-        
-        // if(other.CompareTag("Body"))
-        // {
-        //     Debug.Log("Dead");
-
-        // }
     }
 
     private void Grow()
@@ -179,6 +171,12 @@ public class SnakeController : MonoBehaviour
                 break;
             }
         }
+    }
+
+    private void AddScore(int points)
+    {
+        score += points * scoreMultiplier;
+        Debug.Log("Score: " + score);
     }
 
     public Vector2Int GetSnakeHeadPosition()
