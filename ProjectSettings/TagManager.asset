@@ -8,6 +8,7 @@ TagManager:
   - MassBurner
   - MassGainer
   - Body
+  - PowerUp
   layers:
   - Default
   - TransparentFX

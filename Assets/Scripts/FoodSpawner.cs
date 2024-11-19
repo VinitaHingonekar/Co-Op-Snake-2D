@@ -6,11 +6,15 @@ public class FoodSpawner : MonoBehaviour
 {
     public GameObject massGainerPrefab;
     public GameObject massBurnerPrefab;
+    public GameObject[] powerUpPrefabs;
+    
     [SerializeField] private int girdWidth = 20;
     [SerializeField] private int girdHeight = 20;
     [SerializeField] private float minSpawnInterval = 3f;
     [SerializeField] private float maxSpawnInterval = 5f;
+
     [SerializeField] private float foodLifetime = 10f;
+    [SerializeField] private float powerUpLifetime = 7f;
 
     private SnakeController snakeController;
 
@@ -20,6 +24,7 @@ public class FoodSpawner : MonoBehaviour
     {
         snakeController = FindObjectOfType<SnakeController>();
         StartCoroutine(SpawnFoodRoutine());
+        StartCoroutine(SpawnPowerUpRoutine());
     }
 
     // Update is called once per frame
@@ -37,15 +42,18 @@ public class FoodSpawner : MonoBehaviour
         }
     }
 
+    private IEnumerator SpawnPowerUpRoutine()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(Random.Range(minSpawnInterval, maxSpawnInterval));
+            SpawnRandomPowerUp();
+        }
+    }
+
     private void SpawnRandomFood()
     {
-        Vector2Int foodPosition;
-        do{
-            int x = Random.Range(0, girdWidth);
-            int y = Random.Range(0, girdHeight);
-            foodPosition = new Vector2Int(x, y);
-        }
-        while (snakeController.IsOccupiedBySnake(foodPosition));
+        Vector2Int foodPosition = GetRandomPosition();
 
         GameObject foodPrefab = ChooseFoodType();
 
@@ -54,7 +62,38 @@ public class FoodSpawner : MonoBehaviour
             GameObject food = Instantiate(foodPrefab, new Vector3(foodPosition.x, foodPosition.y, 0), Quaternion.identity);
             Destroy(food, foodLifetime);
         }
+    }
 
+    private void SpawnRandomPowerUp()
+    {
+        Vector2Int powerUpPosition = GetRandomPosition();
+
+        GameObject powerUpPrefab = powerUpPrefabs[Random.Range(0, powerUpPrefabs.Length)];
+
+        GameObject powerUp = Instantiate(powerUpPrefab, new Vector3(powerUpPosition.x, powerUpPosition.y, 0), Quaternion.identity);
+        Destroy(powerUp, powerUpLifetime);
+
+        // GameObject powe = ChooseFoodType();
+
+        // if(foodPrefab != null)
+        // {
+        //     GameObject food = Instantiate(foodPrefab, new Vector3(foodPosition.x, foodPosition.y, 0), Quaternion.identity);
+        // }
+
+    }
+
+    private Vector2Int GetRandomPosition()
+    {
+        Vector2Int randomPosition;
+
+        do{
+            int x = Random.Range(0, girdWidth);
+            int y = Random.Range(0, girdHeight);
+            randomPosition = new Vector2Int(x, y);
+        }
+        while (snakeController.IsOccupiedBySnake(randomPosition));
+
+        return randomPosition;
     }
 
     private GameObject ChooseFoodType()

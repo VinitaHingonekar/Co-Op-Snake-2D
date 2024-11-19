@@ -245,11 +245,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   massGainerPrefab: {fileID: 5125639019666010255, guid: 277d5566bced98f479ad7a4757f3d38f, type: 3}
   massBurnerPrefab: {fileID: 8833161101698412502, guid: e95d06665d7c0104398ed77be7321b8c, type: 3}
+  powerUpPrefabs:
+  - {fileID: 5564197342887048209, guid: 5b559172102348f47818c0a447bab41f, type: 3}
+  - {fileID: 5817015499786747664, guid: b56f32712e15a364bbacdc8f571ddd07, type: 3}
+  - {fileID: 8392674249026663697, guid: e4dea5c94aeb3bb489cd6d055643393a, type: 3}
   girdWidth: 20
   girdHeight: 20
   minSpawnInterval: 3
   maxSpawnInterval: 5
   foodLifetime: 4
+  powerUpLifetime: 7
 --- !u!4 &1080720899
 Transform:
   m_ObjectHideFlags: 0

@@ -21,9 +21,11 @@ public class SnakeController : MonoBehaviour
     private int decreaseLenght = 2;
 
     private int score;
-    private int scoreMultiplier = 1;
     private int foodScore = 10;
 
+    // power up varaibles
+    bool hasShield = false;
+    private int scoreMultiplier = 1;
 
     private void Awake()
     {
@@ -123,8 +125,16 @@ public class SnakeController : MonoBehaviour
 
     private void Death()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        score = 0;
+        if(hasShield)
+        {
+            Debug.Log("Shield used");
+            hasShield = false;
+        }
+        else
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            score = 0;
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D other) 
@@ -139,6 +149,13 @@ public class SnakeController : MonoBehaviour
         else if(other.CompareTag("MassBurner"))
         {
             // Debug.Log("Snake ate burner");
+            Destroy(other.gameObject);
+            Shrink(decreaseLenght);
+            AddScore(-foodScore);
+        }
+        else if(other.CompareTag("PowerUp"))
+        {
+            Debug.Log("Snake got a power up");
             Destroy(other.gameObject);
             Shrink(decreaseLenght);
             AddScore(-foodScore);
