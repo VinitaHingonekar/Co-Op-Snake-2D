@@ -31,6 +31,9 @@ public class SnakeController : MonoBehaviour
     private bool isOnCooldown = false;
     private bool hasShield = false;
 
+    // UI
+    public UIManager uiManager;
+
     private void Awake()
     {
         headPosition = new Vector2Int(10, 10);
@@ -138,7 +141,8 @@ public class SnakeController : MonoBehaviour
         }
         else
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            // SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            uiManager.ShowGameOverScreen();
             score = 0;
         }
     }

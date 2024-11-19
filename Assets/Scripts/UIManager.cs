@@ -7,6 +7,7 @@ public class UIManager : MonoBehaviour
 {
     public GameObject pausePanel;
     public GameObject gamePanel;
+    public GameObject gameOverScreen;
 
     public void PlaySinglePlayer()
     {
@@ -47,5 +48,12 @@ public class UIManager : MonoBehaviour
     {
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public void ShowGameOverScreen()
+    {
+        Time.timeScale = 0f;
+        gamePanel.SetActive(false);
+        gameOverScreen.SetActive(true);
     }
 }
