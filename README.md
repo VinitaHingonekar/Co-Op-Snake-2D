@@ -1,4 +1,5 @@
 About the Game
+
 A snake game featuring classic mechanics with added power-ups, dynamic food interactions, and a competitive co-op mode for two players.
 
 Features Implemented
