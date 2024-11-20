@@ -12,9 +12,18 @@ public class UIManager : MonoBehaviour
     public GameObject gameOverScreen;
 
     public TextMeshProUGUI scoreText;
+    public TextMeshProUGUI gameOverScoreText;
     // public Image powerUpActiveSprite;
     // public Image powerUpSprite;
     
+    // power ups
+    // public Image shieldImage;
+    // public Image speedUpImage;
+    // public Image scoreBoostImage;
+
+    // Player 1 Power Up UI
+    [Header("Player PowerUps")]
+    public Image[] p1Images;
 
     public void PlaySinglePlayer()
     {
@@ -57,11 +66,24 @@ public class UIManager : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
-    public void ShowGameOverScreen()
+    public void ShowGameOverScreen(int score)
     {
         Time.timeScale = 0f;
         gamePanel.SetActive(false);
         gameOverScreen.SetActive(true);
+        gameOverScoreText.text = "Your Score : " + score;
+    }
+
+    public void ShowGameOverScreen(SnakeController.PlayerNumber playerNumber)
+    {
+        Time.timeScale = 0f;
+        gamePanel.SetActive(false);
+        gameOverScreen.SetActive(true);
+        if((int)playerNumber == 0)
+            gameOverScoreText.text = "Player 2 Won";
+        else
+            gameOverScoreText.text = "Player 2 Won";
+            
     }
 
     public void UpdateScore(int score)
@@ -69,10 +91,21 @@ public class UIManager : MonoBehaviour
         scoreText.text = "Score : " + score;
     }
 
-    public IEnumerator UpdatePowerUp(string powerUpName, float duration)
+    public IEnumerator UpdatePowerUp(PowerUp.PowerUpType powerUp, float duration)
     {
-        // powerUpText.text = powerUpName;
+        // p1Images[(int)powerUp].color = Color.green;
+        // yield return new WaitForSeconds(duration);
+        // p1Images[(int)powerUp].color = Color.white;    
+
+        Color color = p1Images[(int)powerUp].color;
+        color.a = 1f;
+        p1Images[(int)powerUp].color = color;
+
         yield return new WaitForSeconds(duration);
-        // powerUpText.text = "";
+
+        color.a = 0.5f;
+        p1Images[(int)powerUp].color = color;
+
     }
+
 }

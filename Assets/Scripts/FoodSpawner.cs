@@ -104,7 +104,7 @@ public class FoodSpawner : MonoBehaviour
         if (!canSpawnBurner)
             return massGainerPrefab;
 
-        return Random.value > 0.5 ? massGainerPrefab : massGainerPrefab;
+        return Random.value > 0.5 ? massGainerPrefab : massBurnerPrefab;
     }
 
     // public void SpawnFood()
