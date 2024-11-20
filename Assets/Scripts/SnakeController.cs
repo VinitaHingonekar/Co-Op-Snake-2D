@@ -171,7 +171,7 @@ public class SnakeController : MonoBehaviour
 
     private void Death()
     {
-        Debug.Log(this.name + "dies");
+        // Debug.Log(this.name + "dies");
         if(hasShield)
         {
             Debug.Log("Shield used");
@@ -179,6 +179,7 @@ public class SnakeController : MonoBehaviour
         }
         else
         {
+            SoundManager.Instance.Play(Sounds.PlayerDeath);
             if(isMultiPlayerScene)
             {
                 uiManager.ShowGameOverScreen(playerNumber);
@@ -195,12 +196,14 @@ public class SnakeController : MonoBehaviour
     {
         if(other.CompareTag("MassGainer"))
         {
+            SoundManager.Instance.Play(Sounds.Gainer);
             Destroy(other.gameObject);
             Grow();
             AddScore(foodScore);
         }
         else if(other.CompareTag("MassBurner"))
         {
+            SoundManager.Instance.Play(Sounds.Burner);
             Destroy(other.gameObject);
             Shrink(decreaseLenght);
             AddScore(-foodScore);
@@ -211,6 +214,7 @@ public class SnakeController : MonoBehaviour
             {
                 if(!isOnCooldown)
                 {
+                    SoundManager.Instance.Play(Sounds.PowerUp);
                     PowerUp powerUp = other.GetComponent<PowerUp>();
                     Destroy(other.gameObject);
                     ActivatePowerUp(powerUp.powerUpType, powerUp.duration);

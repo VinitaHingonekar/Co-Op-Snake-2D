@@ -25,19 +25,27 @@ public class UIManager : MonoBehaviour
     [Header("Player PowerUps")]
     public Image[] p1Images;
 
+    public void PlaySound()
+    {
+        SoundManager.Instance.Play(Sounds.ButtonClick);
+    }
+
     public void PlaySinglePlayer()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        SoundManager.Instance.Play(Sounds.ButtonClick);
     }
 
     public void PlayMultiPlayer()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 2);
+        SoundManager.Instance.Play(Sounds.ButtonClick);
     }
 
     public void Quit()
     {
         Application.Quit();
+        SoundManager.Instance.Play(Sounds.ButtonClick);
     }
 
     public void Pause()
@@ -45,6 +53,7 @@ public class UIManager : MonoBehaviour
         Time.timeScale = 0f;
         pausePanel.SetActive(true);
         gamePanel.SetActive(false);
+        SoundManager.Instance.Play(Sounds.ButtonClick);
     }
 
     public void Resume()
@@ -52,18 +61,21 @@ public class UIManager : MonoBehaviour
         Time.timeScale = 1f;
         pausePanel.SetActive(false);
         gamePanel.SetActive(true);
+        SoundManager.Instance.Play(Sounds.ButtonClick);
     }
 
     public void MainMenu()
     {
         Time.timeScale = 1f;
         SceneManager.LoadScene("MainMenu");
+        SoundManager.Instance.Play(Sounds.ButtonClick);
     }
 
     public void Restart()
     {
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        SoundManager.Instance.Play(Sounds.ButtonClick);
     }
 
     public void ShowGameOverScreen(int score)
