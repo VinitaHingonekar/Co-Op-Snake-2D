@@ -10,8 +10,8 @@ public class FoodSpawner : MonoBehaviour
     
     [SerializeField] private int girdWidth = 20;
     [SerializeField] private int girdHeight = 20;
-    [SerializeField] private float minSpawnInterval = 3f;
-    [SerializeField] private float maxSpawnInterval = 5f;
+    [SerializeField] private float minSpawnInterval = 1f;
+    [SerializeField] private float maxSpawnInterval = 4f;
 
     [SerializeField] private float foodLifetime = 10f;
     [SerializeField] private float powerUpLifetime = 7f;
@@ -73,13 +73,6 @@ public class FoodSpawner : MonoBehaviour
         GameObject powerUp = Instantiate(powerUpPrefab, new Vector3(powerUpPosition.x, powerUpPosition.y, 0), Quaternion.identity);
         Destroy(powerUp, powerUpLifetime);
 
-        // GameObject powe = ChooseFoodType();
-
-        // if(foodPrefab != null)
-        // {
-        //     GameObject food = Instantiate(foodPrefab, new Vector3(foodPosition.x, foodPosition.y, 0), Quaternion.identity);
-        // }
-
     }
 
     private Vector2Int GetRandomPosition()
@@ -104,7 +97,7 @@ public class FoodSpawner : MonoBehaviour
         if (!canSpawnBurner)
             return massGainerPrefab;
 
-        return Random.value > 0.5 ? massGainerPrefab : massBurnerPrefab;
+        return Random.value > 0.3 ? massGainerPrefab : massBurnerPrefab;
     }
 
     // public void SpawnFood()
